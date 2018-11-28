@@ -72,4 +72,5 @@ FC_OBJECT (COLOR,		FcTypeBool,	FcCompareBool)
 FC_OBJECT (SYMBOL,		FcTypeBool,	FcCompareBool)
 FC_OBJECT (FONT_VARIATIONS,	FcTypeString,	NULL)
 FC_OBJECT (VARIABLE,		FcTypeBool,	FcCompareBool)
+FC_OBJECT (LOCALE,		FcTypeLangSet,	NULL)
 /* ^-------------- Add new objects here. */

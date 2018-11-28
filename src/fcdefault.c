@@ -211,12 +211,41 @@ retry:
     return prgname;
 }
 
+FcLangSet *locales;
+
+const FcLangSet *
+FcGetLocale (void)
+{
+    FcLangSet *result;
+retry:
+    result = (FcLangSet *) fc_atomic_ptr_get (&locales);
+    if (!result)
+    {
+        FcStrSet     *ss;
+        unsigned int i;
+
+        result = FcLangSetCreate ();
+
+        ss = FcGetDefaultLangs ();
+        for (i = 0; i < ss->num; i++)
+            FcLangSetAdd (result, ss->strs[i]);
+
+	if (!fc_atomic_ptr_cmpexch (&locales, NULL, result)) {
+	    FcLangSetDestroy (result);
+	    goto retry;
+	}
+    }
+
+    return result;
+}
+
 void
 FcDefaultFini (void)
 {
-    FcChar8  *lang;
-    FcStrSet *langs;
-    FcChar8  *prgname;
+    FcChar8   *lang;
+    FcStrSet  *langs;
+    FcChar8   *prgname;
+    FcLangSet *locale;
 
     lang = fc_atomic_ptr_get (&default_lang);
     if (lang && fc_atomic_ptr_cmpexch (&default_lang, lang, NULL)) {
@@ -232,6 +261,11 @@ FcDefaultFini (void)
     prgname = fc_atomic_ptr_get (&default_prgname);
     if (prgname && fc_atomic_ptr_cmpexch (&default_prgname, prgname, NULL)) {
 	free (prgname);
+    }
+
+    locale = fc_atomic_ptr_get (&locales);
+    if (locale && fc_atomic_ptr_cmpexch (&locales, locale, NULL)) {
+	FcLangSetDestroy (locale);
     }
 }
 
@@ -334,6 +368,13 @@ FcDefaultSubstitute (FcPattern *pattern)
 	FcChar8 *prgname = FcGetPrgname ();
 	if (prgname)
 	    FcPatternObjectAddString (pattern, FC_PRGNAME_OBJECT, prgname);
+    }
+
+    if (FcPatternObjectGet (pattern, FC_LOCALE_OBJECT, 0, &v) == FcResultNoMatch)
+    {
+	const FcLangSet *ls = FcGetLocale ();
+	if (ls)
+	    FcPatternAddLangSet (pattern, FC_LOCALE, ls);
     }
 }
 #define __fcdefault__

@@ -878,6 +878,9 @@ FcGetDefaultLang (void);
 FcPrivate FcChar8 *
 FcGetPrgname (void);
 
+FcPrivate const FcLangSet *
+FcGetLocale (void);
+
 FcPrivate void
 FcDefaultFini (void);
 

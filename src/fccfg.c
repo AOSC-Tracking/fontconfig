@@ -1641,6 +1641,12 @@ FcConfigSubstituteWithPat (FcConfig    *config,
 	    if (prgname)
 		FcPatternObjectAddString (p, FC_PRGNAME_OBJECT, prgname);
 	}
+	if (FcPatternObjectGet (p, FC_LOCALE_OBJECT, 0, &v) == FcResultNoMatch)
+	{
+	    const FcLangSet *ls = FcGetLocale ();
+	    if (ls)
+		FcPatternAddLangSet (p, FC_LOCALE, ls);
+	}
     }
 
     nobjs = FC_MAX_BASE_OBJECT + config->maxObjects + 2;
