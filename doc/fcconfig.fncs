@@ -393,9 +393,10 @@ parse error, semantic error or allocation failure. Otherwise returns FcTrue.
 @TYPE1@		const FcConfig *		@ARG1@		config
 @PURPOSE@	Obtain the system root directory
 @DESC@
-Obtains the system root directory in 'config' if available. All files
-(including file properties in patterns) obtained from this 'config' are
-relative to this system root directory.
+Obtains the system root directory in 'config' if available. When a file path
+lexically begins with this string, this prefix will be removed when added to
+patterns. Files paths (including file properties in patterns) obtained from
+this 'config' should be first searched for relative to this directory.
 @SINCE@		2.10.92
 @@
 
@@ -405,13 +406,13 @@ relative to this system root directory.
 @TYPE2@		const FcChar8 *			@ARG2@		sysroot
 @PURPOSE@	Set the system root directory
 @DESC@
-Set 'sysroot' as the system root directory. All file paths used or created with
-this 'config' (including file properties in patterns) will be considered or
-made relative to this 'sysroot'. This allows a host to generate caches for
-targets at build time. This also allows a cache to be re-targeted to a
-different base directory if 'FcConfigGetSysRoot' is used to resolve file paths.
-When setting this on the current config this causes changing current config
-(calls FcConfigSetCurrent()).
+Set 'sysroot' as the system root directory. When a file path lexically begins
+with the resulting FcConfigGetSysRoot string, this prefix will be removed when
+added to patterns. This allows a host to generate caches for targets at build
+time. This also allows a cache to be re-targeted to a different base directory
+if 'FcConfigGetSysRoot' is used to resolve file paths. When setting this on the
+current config this causes changing the current config (calls
+FcConfigSetCurrent()).
 @SINCE@		2.10.92
 @@
 
