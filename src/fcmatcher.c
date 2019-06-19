@@ -63,6 +63,8 @@ FcCompareString (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
     return (double) FcStrCmpIgnoreCase (FcValueString(v1), FcValueString(v2)) != 0;
 }
 
+static inline FcBool fc_iszero(double a) { return fabs (a) <= DBL_EPSILON; }
+
 static double
 FcCompareFamily (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
 {
@@ -70,14 +72,28 @@ FcCompareFamily (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
      * families are always FcTypeString. */
     const FcChar8* v1_string = FcValueString(v1);
     const FcChar8* v2_string = FcValueString(v2);
+    int n;
+    size_t len1, len2;
+    double ret;
 
     *bestValue = FcValueCanonicalize (v2);
 
     if (FcToLower(*v1_string) != FcToLower(*v2_string) &&
 	*v1_string != ' ' && *v2_string != ' ')
-       return 1.0;
+       return 3.0;
 
-    return (double) FcStrCmpIgnoreBlanksAndCase (v1_string, v2_string) != 0;
+    n = FcStrMatchIgnoreCaseAndDelims (v1_string, v2_string, (const FcChar8 *)" ");
+    len1 = strlen ((const char *)v1_string);
+    len2 = strlen ((const char *)v2_string);
+
+    /* Gives more score on forward matching */
+    ret = (double)(len2 - FC_MIN (len2, n)) / (double)len2;
+    /* Lower score if less forward matching */
+    ret += (!fc_iszero (ret) * 1.0);
+    /* Lower score if not exact matching */
+    ret += (1.0 * ((double)(len1 - n) / (double)len1) > 0);
+
+    return ret;
 }
 
 static double
@@ -86,18 +102,27 @@ FcComparePostScript (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
     const FcChar8 *v1_string = FcValueString (v1);
     const FcChar8 *v2_string = FcValueString (v2);
     int n;
-    size_t len;
+    size_t len1, len2;
+    double ret;
 
     *bestValue = FcValueCanonicalize (v2);
 
     if (FcToLower (*v1_string) != FcToLower (*v2_string) &&
 	*v1_string != ' ' && *v2_string != ' ')
-	return 1.0;
+	return 3.0;
 
     n = FcStrMatchIgnoreCaseAndDelims (v1_string, v2_string, (const FcChar8 *)" -");
-    len = strlen ((const char *)v1_string);
+    len1 = strlen ((const char *)v1_string);
+    len2 = strlen ((const char *)v2_string);
 
-    return (double)(len - n) / (double)len;
+    /* Gives more score on forward matching */
+    ret = (double)(len2 - FC_MIN (len2, n)) / (double)len2;
+    /* Lower score if less forward matching */
+    ret += (!fc_iszero (ret) * 1.0);
+    /* Lower score if not exact matching */
+    ret += (1.0 * ((double)(len1 - n) / (double)len1) > 0);
+
+    return ret;
 }
 
 double
@@ -151,6 +176,8 @@ FcCompareLang (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
 static double
 FcCompareBool (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
 {
+    double ret;
+
     if (v2->type != FcTypeBool || v1->type != FcTypeBool)
 	return -1.0;
 
@@ -159,7 +186,9 @@ FcCompareBool (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
     else
 	*bestValue = FcValueCanonicalize (v1);
 
-    return (double) ((v2->u.b ^ v1->u.b) == 1);
+    ret = (double) ((v2->u.b ^ v1->u.b) == 1) * 2.0;
+
+    return ret;
 }
 
 static double
