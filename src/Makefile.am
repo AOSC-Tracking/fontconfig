@@ -145,6 +145,8 @@ libfontconfig_la_SOURCES = \
 	fclang.c \
 	fclist.c \
 	fcmatch.c \
+	fcmatcher.c \
+	fcmatcher.h \
 	fcmatrix.c \
 	fcmutex.h \
 	fcname.c \

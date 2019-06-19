@@ -593,6 +593,12 @@ struct _FcValuePromotionBuffer {
   } u;
 };
 
+typedef struct _FcMatcher {
+    FcObject object;
+    double   (*compare) (const FcValue *v1, const FcValue *v2, FcValue *bestValue);
+    int      strong, weak;
+} FcMatcher;
+
 /* fccache.c */
 
 FcPrivate FcCache *
@@ -1022,6 +1028,14 @@ FcListPatternMatchAny (const FcPattern *p,
 		       const FcPattern *font);
 
 /* fcmatch.c */
+
+/* fcmatcher.c */
+const FcMatcher *
+FcObjectToMatcher (FcObject object,
+		   FcBool   include_lang);
+
+double
+FcCompareLang (const FcValue *v1, const FcValue *v2, FcValue *bestValue);
 
 /* fcname.c */
 
