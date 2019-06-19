@@ -127,7 +127,8 @@ FcObjectSetBuild (const char *first, ...)
  * Font must have a containing value for every value in the pattern
  */
 static FcBool
-FcListValueListMatchAny (FcValueListPtr patOrig,	    /* pattern */
+FcListValueListMatchAny (FcObject       object,
+			 FcValueListPtr patOrig,	    /* pattern */
 			 FcValueListPtr fntOrig)	    /* font */
 {
     FcValueListPtr	 pat, fnt;
@@ -136,15 +137,28 @@ FcListValueListMatchAny (FcValueListPtr patOrig,	    /* pattern */
     {
 	for (fnt = fntOrig; fnt != NULL; fnt = FcValueListNext(fnt))
 	{
+	    const FcMatcher *match = FcObjectToMatcher (object, FcFalse);
 	    /*
 	     * make sure the font 'contains' the pattern.
 	     * (OpListing is OpContains except for strings
 	     *  where it requires an exact match)
 	     */
-	    if (FcConfigCompareValue (&fnt->value,
-				      FC_OP (FcOpListing, FcOpFlagIgnoreBlanks),
-				      &pat->value))
-		break;
+	    if (match)
+	    {
+		FcValue matchValue;
+		int v;
+
+		v = (int)(match->compare)(&fnt->value, &pat->value, &matchValue);
+		if (v >= 0 && v < 2)
+		    break;
+	    }
+	    else
+	    {
+		if (FcConfigCompareValue (&fnt->value,
+					  FC_OP (FcOpListing, FcOpFlagIgnoreBlanks),
+					  &pat->value))
+		    break;
+	    }
 	}
 	if (fnt == NULL)
 	    return FcFalse;
@@ -231,7 +245,8 @@ FcListPatternMatchAny (const FcPattern *p,
 	fe = FcPatternObjectFindElt (font, pe->object);
 	if (!fe)
 	    return FcFalse;
-	if (!FcListValueListMatchAny (FcPatternEltValues(pe),    /* pat elts */
+	if (!FcListValueListMatchAny (pe->object,
+				      FcPatternEltValues(pe),    /* pat elts */
 				      FcPatternEltValues(fe)))   /* font elts */
 	    return FcFalse;
     }
