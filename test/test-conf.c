@@ -324,6 +324,11 @@ run_test (FcConfig *config, json_object *root)
 		    printf ("E: The number of results is different:\n");
 		    printf ("   actual result: %d\n", fs->nfont);
 		    printf ("   expected result: %d\n", result_fs->nfont);
+		    printf ("Actual ");
+		    FcFontSetPrint (fs);
+		    printf ("\n\nExpected ");
+		    FcFontSetPrint (result_fs);
+		    printf ("\n");
 		    fail++;
 		    goto bail2;
 		}
