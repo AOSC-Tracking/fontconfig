@@ -59,8 +59,12 @@ FcCompareNumber (const FcValue *value1, const FcValue *value2, FcValue *bestValu
 static double
 FcCompareString (const FcValue *v1, const FcValue *v2, FcValue *bestValue)
 {
+    double ret;
+
     *bestValue = FcValueCanonicalize (v2);
-    return (double) FcStrCmpIgnoreCase (FcValueString(v1), FcValueString(v2)) != 0;
+    ret = ((double) FcStrCmpIgnoreCase (FcValueString(v1), FcValueString(v2)) != 0) * 2.0;
+
+    return ret;
 }
 
 static inline FcBool fc_iszero(double a) { return fabs (a) <= DBL_EPSILON; }
