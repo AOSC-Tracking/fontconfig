@@ -78,7 +78,22 @@ to be up to date, and used.
 Finds the font in <parameter>sets</parameter> most closely matching
 <parameter>pattern</parameter> and returns the result of
 <function>FcFontRenderPrepare</function> for that font and the provided
-pattern. This function should be called only after
+pattern.
+The closeness is determined by weighting per-property distances between font and pattern.
+Each property of the pattern can contain one or more values; matches earlier in
+the value-list are considered lower distance than
+matches later in the value-list.
+Each property has a priority.  Priority order:
+foundry, charset, family strongly binded, lang, family weakly binded, spacing, pixelsize, style,
+slant, weight, antialias, rasterizer and outline.
+Whether a font is closer to the whole pattern then another is determined by the
+highest priority per-property distance that differs.
+    </para><para>
+Works nicely with already sorted sets: if the closest font is not unique, the first font from the first set is returned.
+If language is not important for the returned font, for example because it is
+fallback for a character, the special language ordering of
+<function>FcFontSetSort</function> can be used by removing the lang property from <parameter>pattern</parameter>.  Note: even if it is not set explicitly, a lang property is added by <function>FcConfigSubstitute</function>.
+This function should be called only after
 <function>FcConfigSubstitute</function> and
 <function>FcDefaultSubstitute</function> have been called for
 <parameter>pattern</parameter>; otherwise the results will not be correct.
@@ -109,23 +124,44 @@ change at any time.
 @PURPOSE@	Add to a font set
 @DESC@
 Returns the list of fonts from <parameter>sets</parameter>
-sorted by closeness to <parameter>pattern</parameter>.  
+sorted by closeness to <parameter>pattern</parameter>.
+
+The closeness is determined by weighting per-property distances between font and pattern.
+Each property of the pattern can contain one or more values; matches earlier in
+the value-list are considered lower distance than
+matches later in the value-list.
+Each property has a priority.  Priority order:
+foundry, charset, family strongly binded, lang, family weakly binded, spacing, pixelsize, style,
+slant, weight, antialias, rasterizer and outline.
+Whether a font is closer to the whole pattern then another is determined by the
+highest priority per-property distance that differs.
+    </para><para>
+The sorting is a two-pass process because the lang property is handled
+specially.  On first pass the fonts are sorted according to the normal rules
+just explained.  Then for every langset value (strings are considered a langset
+with one member for this explanation) in <parameter>pattern</parameter> the
+first font, if any is chosen that satisfies it,  except that already chosen fonts
+are never reused for later langsets.  The chosen fonts retain their distance in
+the lang property, other fonts' lang-distance is set to maximum as if they
+wouldn't match any language from <parameter>pattern</parameter>.  Then the
+fonts are resorted.  The net effect is ignoring lang property for all but one
+font per lang values.
+    </para><para>
 If <parameter>trim</parameter> is FcTrue,
-elements in the list which don't include Unicode coverage not provided by
-earlier elements in the list are elided.  The union of Unicode coverage of
+fonts in the final sorted list which don't include Unicode coverage not provided by
+earlier fonts in the list are elided.  The union of Unicode coverage of
 all of the fonts is returned in <parameter>csp</parameter>,
 if <parameter>csp</parameter> is not NULL.  This function
 should be called only after FcConfigSubstitute and FcDefaultSubstitute have
-been called for <parameter>p</parameter>;
+been called for <parameter>pattern</parameter>;
 otherwise the results will not be correct.
-    </para><para>
 The returned FcFontSet references FcPattern structures which may be shared
-by the return value from multiple FcFontSort calls, applications cannot
+by the return value from multiple <function>FcFontSort</function> calls, applications cannot
 modify these patterns.  Instead, they should be passed, along with
 <parameter>pattern</parameter> to
 <function>FcFontRenderPrepare</function> which combines them into a complete pattern.
     </para><para>
-The FcFontSet returned by FcFontSetSort is destroyed by calling FcFontSetDestroy.
+The FcFontSet returned by <function>FcFontSetSort</function> is destroyed by calling <function>FcFontSetDestroy</function>.
 @@
 
 @RET@		void
