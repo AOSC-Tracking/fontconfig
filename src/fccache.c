@@ -1323,16 +1323,6 @@ FcDirCacheWrite (FcCache *cache, FcConfig *config)
 		    break;
 		}
 	    }
-	    /*
-	     * Otherwise, try making it writable
-	     */
-	    else if (chmod ((char *) d, 0755) == 0)
-	    {
-		cache_dir = FcStrCopyFilename (d);
-		/* Try to create CACHEDIR.TAG too */
-		FcDirCacheCreateTagFile (d);
-		break;
-	    }
 	}
     }
     if (d)
