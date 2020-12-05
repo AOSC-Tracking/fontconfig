@@ -313,44 +313,71 @@ typedef enum _FcMatcherPriorityDummy {
 
 /* Canonical match priority order. */
 
+#define PRI_LIST				\
+    PRI1(FILE),					\
+    PRI1(FONTFORMAT),				\
+    PRI1(VARIABLE),				\
+    PRI1(SCALABLE),				\
+    PRI1(COLOR),				\
+    PRI1(FOUNDRY),				\
+    PRI1(CHARSET),				\
+    PRI_BIND(FAMILY, STRONG),                   \
+    PRI_BIND(POSTSCRIPT_NAME, STRONG),          \
+    PRI1(LANG),					\
+    PRI_BIND(FAMILY, WEAK),			\
+    PRI_BIND(POSTSCRIPT_NAME, WEAK),		\
+    PRI1(SYMBOL),				\
+    PRI1(SPACING),				\
+    PRI1(SIZE),					\
+    PRI1(PIXEL_SIZE),				\
+    PRI1(STYLE),				\
+    PRI1(SLANT),				\
+    PRI1(WEIGHT),				\
+    PRI1(WIDTH),				\
+    PRI1(FONT_HAS_HINT),			\
+    PRI1(DECORATIVE),				\
+    PRI1(ANTIALIAS),				\
+    PRI1(RASTERIZER),				\
+    PRI1(OUTLINE),				\
+    PRI1(ORDER),				\
+    PRI1(FONTVERSION)
+
 #undef PRI1
 #define PRI1(n)					\
     PRI_ ## n,					\
     PRI_ ## n ## _STRONG = PRI_ ## n,		\
     PRI_ ## n ## _WEAK = PRI_ ## n
 
+#define STRONG
+#define WEAK
+#define PRI_BIND(n, b)				\
+    PRI_ ## n ## _ ## b
+
 typedef enum _FcMatcherPriority {
-    PRI1(FILE),
-    PRI1(FONTFORMAT),
-    PRI1(VARIABLE),
-    PRI1(SCALABLE),
-    PRI1(COLOR),
-    PRI1(FOUNDRY),
-    PRI1(CHARSET),
-    PRI_FAMILY_STRONG,
-    PRI_POSTSCRIPT_NAME_STRONG,
-    PRI1(LANG),
-    PRI_FAMILY_WEAK,
-    PRI_POSTSCRIPT_NAME_WEAK,
-    PRI1(SYMBOL),
-    PRI1(SPACING),
-    PRI1(SIZE),
-    PRI1(PIXEL_SIZE),
-    PRI1(STYLE),
-    PRI1(SLANT),
-    PRI1(WEIGHT),
-    PRI1(WIDTH),
-    PRI1(FONT_HAS_HINT),
-    PRI1(DECORATIVE),
-    PRI1(ANTIALIAS),
-    PRI1(RASTERIZER),
-    PRI1(OUTLINE),
-    PRI1(ORDER),
-    PRI1(FONTVERSION),
+    PRI_LIST,
     PRI_END
 } FcMatcherPriority;
 
 #undef PRI1
+#define PRI1(n)					\
+    FC_ ## n
+#undef STRONG
+#define STRONG " (s)"
+#undef WEAK
+#define WEAK " (w)"
+#undef PRI_BIND
+#define PRI_BIND(n, b)				\
+    FC_ ## n b
+
+static const char* FcPriorityNames[] = {
+    PRI_LIST
+};
+
+#undef PRI1
+#undef PRI_BIND
+#undef STRONG
+#undef WEAK
+#undef PRI_LIST
 
 typedef struct _FcMatcher {
     FcObject object;
@@ -888,12 +915,11 @@ FcFontSetMatchInternal (FcFontSet   **sets,
             }
 	    if (FcDebug () & FC_DBG_MATCHV)
 	    {
-		printf ("Score");
+		printf ("Score\n");
 		for (i = 0; i < PRI_END; i++)
 		{
-		    printf (" %g", score[i]);
+		    printf ("\t%s: %g\n", FcPriorityNames[i], score[i]);
 		}
-		printf ("\n");
 	    }
 	    for (i = 0; i < PRI_END; i++)
 	    {
@@ -914,10 +940,9 @@ FcFontSetMatchInternal (FcFontSet   **sets,
 
     if (FcDebug () & FC_DBG_MATCH)
     {
-	printf ("Best score");
+	printf ("Best score\n");
 	for (i = 0; i < PRI_END; i++)
-	    printf (" %g", bestscore[i]);
-	printf ("\n");
+	    printf ("\t%s: %g\n", FcPriorityNames[i], bestscore[i]);
 	FcPatternPrint (best);
     }
     if (FcDebug () & FC_DBG_MATCH2)
@@ -1213,12 +1238,11 @@ FcFontSetSort (FcConfig	    *config FC_UNUSED,
 		goto bail1;
 	    if (FcDebug () & FC_DBG_MATCHV)
 	    {
-		printf ("Score");
+		printf ("Score\n");
 		for (i = 0; i < PRI_END; i++)
 		{
-		    printf (" %g", new->score[i]);
+		    printf ("\t%s: %g\n", FcPriorityNames[i], new->score[i]);
 		}
-		printf ("\n");
 	    }
 	    *nodep = new;
 	    new++;
