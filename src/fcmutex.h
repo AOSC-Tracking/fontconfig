@@ -111,10 +111,9 @@ typedef int fc_mutex_impl_t;
 #endif
 
 typedef fc_mutex_impl_t FcMutex;
-static inline void FcMutexInit   (FcMutex *m) { fc_mutex_impl_init (m);   }
-static inline void FcMutexLock   (FcMutex *m) { fc_mutex_impl_lock (m);   }
-static inline void FcMutexUnlock (FcMutex *m) { fc_mutex_impl_unlock (m); }
-static inline void FcMutexFinish (FcMutex *m) { fc_mutex_impl_finish (m); }
 
+void FcMutexTryInitThenLock(FcMutex **m);
+void FcMutexUnlock(FcMutex** m);
+void FcMutexFinish(FcMutex** m);
 
 #endif /* _FCMUTEX_H_ */

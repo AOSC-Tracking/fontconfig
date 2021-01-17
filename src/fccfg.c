@@ -44,40 +44,19 @@ static FcMutex	   *_lock;
 static void
 lock_config (void)
 {
-    FcMutex *lock;
-    do {
-        lock = fc_atomic_ptr_get (&_lock);
-        if(lock == NULL) {
-            lock = malloc(sizeof (FcMutex));
-            FcMutexInit(lock);
-            if(!fc_atomic_ptr_cmpexch (&_lock, NULL, lock)){
-                FcMutexFinish(lock);
-                free(lock);
-                lock = NULL;
-            }
-        }
-    } while (lock == NULL);
-    FcMutexLock(lock);
+    FcMutexTryInitThenLock(&_lock);
 }
 
 static void
 unlock_config (void)
 {
-    FcMutex *lock;
-    lock = fc_atomic_ptr_get (&_lock);
-    FcMutexUnlock (lock);
+    FcMutexUnlock(&_lock);
 }
 
 static void
 free_lock (void)
 {
-    FcMutex *lock;
-    lock = fc_atomic_ptr_get (&_lock);
-    if (lock && fc_atomic_ptr_cmpexch (&_lock, lock, NULL))
-    {
-	FcMutexFinish (lock);
-	free (lock);
-    }
+	FcMutexFinish(&_lock);
 }
 
 static FcConfig *
