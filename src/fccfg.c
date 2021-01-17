@@ -45,24 +45,19 @@ static void
 lock_config (void)
 {
     FcMutex *lock;
-retry:
-    lock = fc_atomic_ptr_get (&_lock);
-    if (!lock)
-    {
-	lock = (FcMutex *) malloc (sizeof (FcMutex));
-	FcMutexInit (lock);
-	if (!fc_atomic_ptr_cmpexch (&_lock, NULL, lock))
-	{
-	    FcMutexFinish (lock);
-	    free (lock);
-	    goto retry;
-	}
-	FcMutexLock (lock);
-	/* Initialize random state */
-	FcRandom ();
-	return;
-    }
-    FcMutexLock (lock);
+    do {
+        lock = fc_atomic_ptr_get (&_lock);
+        if(lock == NULL) {
+            lock = malloc(sizeof (FcMutex));
+            FcMutexInit(lock);
+            if(!fc_atomic_ptr_cmpexch (&_lock, NULL, lock)){
+                FcMutexFinish(lock);
+                free(lock);
+                lock = NULL;
+            }
+        }
+    } while (lock == NULL);
+    FcMutexLock(lock);
 }
 
 static void
