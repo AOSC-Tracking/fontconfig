@@ -50,7 +50,6 @@
 
 #include "fcwindows.h"
 typedef CRITICAL_SECTION fc_mutex_impl_t;
-#define FC_MUTEX_IMPL_INIT	{ NULL, 0, 0, NULL, NULL, 0 }
 #define fc_mutex_impl_init(M)	InitializeCriticalSection (M)
 #define fc_mutex_impl_lock(M)	EnterCriticalSection (M)
 #define fc_mutex_impl_unlock(M)	LeaveCriticalSection (M)
@@ -61,7 +60,6 @@ typedef CRITICAL_SECTION fc_mutex_impl_t;
 
 #include <pthread.h>
 typedef pthread_mutex_t fc_mutex_impl_t;
-#define FC_MUTEX_IMPL_INIT	PTHREAD_MUTEX_INITIALIZER
 #define fc_mutex_impl_init(M)	pthread_mutex_init (M, NULL)
 #define fc_mutex_impl_lock(M)	pthread_mutex_lock (M)
 #define fc_mutex_impl_unlock(M)	pthread_mutex_unlock (M)
@@ -79,7 +77,6 @@ typedef pthread_mutex_t fc_mutex_impl_t;
 
 /* This actually is not a totally awful implementation. */
 typedef volatile int fc_mutex_impl_t;
-#define FC_MUTEX_IMPL_INIT	0
 #define fc_mutex_impl_init(M)	*(M) = 0
 #define fc_mutex_impl_lock(M)	FC_STMT_START { while (__sync_lock_test_and_set((M), 1)) FC_SCHED_YIELD (); } FC_STMT_END
 #define fc_mutex_impl_unlock(M)	__sync_lock_release (M)
@@ -97,7 +94,6 @@ typedef volatile int fc_mutex_impl_t;
 
 #define FC_MUTEX_INT_NIL 1 /* Warn that fallback implementation is in use. */
 typedef volatile int fc_mutex_impl_t;
-#define FC_MUTEX_IMPL_INIT	0
 #define fc_mutex_impl_init(M)	*(M) = 0
 #define fc_mutex_impl_lock(M)	FC_STMT_START { while (*(M)) FC_SCHED_YIELD (); (*(M))++; } FC_STMT_END
 #define fc_mutex_impl_unlock(M)	(*(M))--;
@@ -107,7 +103,6 @@ typedef volatile int fc_mutex_impl_t;
 #else /* FC_NO_MT */
 
 typedef int fc_mutex_impl_t;
-#define FC_MUTEX_IMPL_INIT	0
 #define fc_mutex_impl_init(M)	FC_STMT_START {} FC_STMT_END
 #define fc_mutex_impl_lock(M)	FC_STMT_START {} FC_STMT_END
 #define fc_mutex_impl_unlock(M)	FC_STMT_START {} FC_STMT_END
@@ -115,8 +110,6 @@ typedef int fc_mutex_impl_t;
 
 #endif
 
-
-#define FC_MUTEX_INIT		{FC_MUTEX_IMPL_INIT}
 typedef fc_mutex_impl_t FcMutex;
 static inline void FcMutexInit   (FcMutex *m) { fc_mutex_impl_init (m);   }
 static inline void FcMutexLock   (FcMutex *m) { fc_mutex_impl_lock (m);   }
