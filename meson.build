@@ -252,42 +252,6 @@ endif
 # It will automatically fallback to subproject if not found on system
 gperf = find_program('gperf')
 
-sh = find_program('sh', required : false)
-
-if not sh.found() # host_machine.system() == 'windows' or not sh.found()
-  # TODO: This is not always correct
-  if cc.get_id() == 'msvc'
-    gperf_len_type = 'size_t'
-  else
-    gperf_len_type = 'unsigned'
-  endif
-else
-  gperf_test_format = '''
-  #include <string.h>
-  const char * in_word_set(const char *, @0@);
-  @1@
-  '''
-  gperf_snippet_format = 'echo foo,bar | @0@ -L ANSI-C'
-  gperf_snippet = run_command(sh, '-c', gperf_snippet_format.format(gperf.path()))
-  gperf_test = gperf_test_format.format('size_t', gperf_snippet.stdout())
-
-  if cc.compiles(gperf_test)
-    gperf_len_type = 'size_t'
-  else
-    gperf_test = gperf_test_format.format('unsigned', gperf_snippet.stdout())
-    if cc.compiles(gperf_test)
-      gperf_len_type = 'unsigned'
-    else
-      error('unable to determine gperf len type')
-    endif
-  endif
-endif
-
-message('gperf len type is @0@'.format(gperf_len_type))
-
-conf.set('FC_GPERF_SIZE_T', gperf_len_type,
-  description : 'The type of gperf "len" parameter')
-
 conf.set('_GNU_SOURCE', true)
 
 conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
