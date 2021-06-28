@@ -17,6 +17,7 @@ fc_sources = [
   'fclist.c',
   'fcmatch.c',
   'fcmatrix.c',
+  'fcmutex.c',
   'fcname.c',
   'fcobjs.c',
   'fcpat.c',
