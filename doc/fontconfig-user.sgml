@@ -811,6 +811,10 @@ is used to override the default configuration directory.
 is used to set a default sysroot directory.
   </para>
   <para>
+<emphasis>FC_TEMPLATEDIR</emphasis>
+is used to override the default template configuration directory.
+  </para>
+  <para>
 <emphasis>FC_DEBUG</emphasis>
 is used to output the detailed debugging messages. see <link linkend="debug">Debugging Applications</link> section for more details.
   </para>

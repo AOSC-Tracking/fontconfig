@@ -95,7 +95,12 @@ FcInitLoadOwnConfig (FcConfig *config)
 
 	return fallback;
     }
-    (void) FcConfigParseOnly (config, (const FcChar8 *)FC_TEMPLATEDIR, FcFalse);
+
+    char *env_templatedir = getenv ("FC_TEMPLATEDIR");
+    if (env_templatedir != NULL && env_templatedir[0] != 0)
+	(void) FcConfigParseOnly (config, (const FcChar8 *)env_templatedir, FcFalse);
+    else
+	(void) FcConfigParseOnly (config, (const FcChar8 *)FC_TEMPLATEDIR, FcFalse);
 
     if (config->cacheDirs && config->cacheDirs->num == 0)
     {
