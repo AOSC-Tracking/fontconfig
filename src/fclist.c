@@ -144,12 +144,10 @@ FcListValueListMatchAny (FcValueListPtr patOrig,	    /* pattern */
 	    if (FcConfigCompareValue (&fnt->value,
 				      FC_OP (FcOpListing, FcOpFlagIgnoreBlanks),
 				      &pat->value))
-		break;
+		return FcTrue;
 	}
-	if (fnt == NULL)
-	    return FcFalse;
     }
-    return FcTrue;
+    return FcFalse;
 }
 
 static FcBool
