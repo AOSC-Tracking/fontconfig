@@ -255,12 +255,15 @@ If <parameter>config</parameter> is NULL, the current configuration is used.
 @TYPE4@		FcMatchKind%                     @ARG4@          kind
 @PURPOSE@	Execute substitutions
 @DESC@
-Performs the sequence of pattern modification operations, if <parameter>kind</parameter> is
-FcMatchPattern, then those tagged as pattern operations are applied, else
-if <parameter>kind</parameter> is FcMatchFont, those tagged as font operations are applied and
-p_pat is used for &lt;test&gt; elements with target=pattern. Returns FcFalse
-if the substitution cannot be performed (due to allocation failure). Otherwise returns FcTrue.
-If <parameter>config</parameter> is NULL, the current configuration is used.
+Performs the sequence of pattern modification operations. If <parameter>kind</parameter> is
+FcMatchPattern, then default languages returned by
+<function>FcGetDefaultLangs</function> are appended each as a different element
+to the pattern's lang property value-list unless the pattern includes the
+special "und" language. After that matches tagged as pattern operations are
+applied.
+If <parameter>kind</parameter> is FcMatchFont, font operations are applied and <parameter>p_pat</parameter> is used for &lt;test&gt;
+elements with target=pattern. Returns FcFalse if the substitution cannot be performed (due to allocation failure).
+Otherwise returns FcTrue. If <parameter>config</parameter> is NULL, the current configuration is used.
 @@
 
 @RET@           FcBool
@@ -282,14 +285,8 @@ If <parameter>config</parameter> is NULL, the current configuration is used.
 @TYPE3@		FcResult *                      @ARG3@          result
 @PURPOSE@	Return best font
 @DESC@
-Finds the font in <parameter>sets</parameter> most closely matching
-<parameter>pattern</parameter> and returns the result of
-<function>FcFontRenderPrepare</function> for that font and the provided
-pattern. This function should be called only after
-<function>FcConfigSubstitute</function> and
-<function>FcDefaultSubstitute</function> have been called for
-<parameter>p</parameter>; otherwise the results will not be correct.
-If <parameter>config</parameter> is NULL, the current configuration is used.
+Calls <function>FcFontSetMatch</function> with two sets: the system fonts
+and application-specific fonts from <parameter>config</parameter>.
 @@
 
 @RET@           FcFontSet *
@@ -301,20 +298,8 @@ If <parameter>config</parameter> is NULL, the current configuration is used.
 @TYPE5@		FcResult *                      @ARG5@          result
 @PURPOSE@	Return list of matching fonts
 @DESC@
-Returns the list of fonts sorted by closeness to <parameter>p</parameter>.  If <parameter>trim</parameter> is FcTrue,
-elements in the list which don't include Unicode coverage not provided by
-earlier elements in the list are elided.  The union of Unicode coverage of
-all of the fonts is returned in <parameter>csp</parameter>, if <parameter>csp</parameter> is not NULL.  This function
-should be called only after FcConfigSubstitute and FcDefaultSubstitute have
-been called for <parameter>p</parameter>; otherwise the results will not be correct.
-    </para><para>
-The returned FcFontSet references FcPattern structures which may be shared
-by the return value from multiple FcFontSort calls, applications must not
-modify these patterns.  Instead, they should be passed, along with <parameter>p</parameter> to
-<function>FcFontRenderPrepare</function> which combines them into a complete pattern.
-    </para><para>
-The FcFontSet returned by FcFontSort is destroyed by calling FcFontSetDestroy.
-If <parameter>config</parameter> is NULL, the current configuration is used.
+Calls <function>FcFontSetSort</function> with two sets: the system fonts
+and application-specific fonts from <parameter>config</parameter>.
 @@
 
 @RET@           FcPattern *
