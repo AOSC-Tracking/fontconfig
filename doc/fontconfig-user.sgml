@@ -425,14 +425,15 @@ resulting from a match rather than a font pattern to be matched. If 'target'
 is set to "scan", then this element applies when the font is scanned to
 build the fontconfig database.
   </para></refsect2>
-  <refsect2><title><literal>&lt;test qual="any" name="property" target="default" compare="eq"&gt;</literal></title><para>
+  <refsect2><title><literal>&lt;test qual="any" name="property" target="default" compare="eq" ignore-blanks="false"&gt;</literal></title><para>
 This element contains a single value which is compared with the target
 ('pattern', 'font', 'scan' or 'default') property "property" (substitute any of the property names seen 
 above). 'compare' can be one of "eq", "not_eq", "less", "less_eq", "more", "more_eq", "contains" or
-"not_contains".  'qual' may either be the default, "any", in which case the match
-succeeds if any value associated with the property matches the test value, or
-"all", in which case all of the values associated with the property must
-match the test value.  'ignore-blanks' takes a boolean value. if 'ignore-blanks' is set "true", any blanks in the string will be ignored on its comparison. this takes effects only when compare="eq" or compare="not_eq".
+"not_contains".  'qual' may be the default, "any", or one of "all", "first" or "not_first".  For "any", "all" and "first" the match
+succeeds if any, all or the first value associated with the property matches the test value.  "not_first"
+succeds if the first value doesn't match, but some other value associated with the property does.
+'ignore-blanks' takes a boolean value.  If 'ignore-blanks' is set "true", any blanks in the string will be ignored on its comparison.
+This takes effect only when compare="eq" or compare="not_eq".
 When used in a &lt;match target="font"&gt; element,
 the target= attribute in the &lt;test&gt; element selects between matching
 the original pattern or the font.  "default" selects whichever target the
