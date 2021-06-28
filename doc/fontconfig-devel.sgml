@@ -204,6 +204,8 @@ convenience for the application's rendering mechanism.
     fontfeatures   FC_FONT_FEATURES       String  List of extra feature tags in
                                                   OpenType to be enabled
     prgname        FC_PRGNAME             String  Name of the running program
+    prgname        FC_PRGNAME             String  Basename of the running program's executable.
+                                                  On Windows, this excludes the .exe extension.
     hash           FC_HASH                String  SHA256 hash value of the font data
                                                   with "sha256:" prefix (deprecated)
     postscriptname FC_POSTSCRIPT_NAME     String  Font name in PostScript

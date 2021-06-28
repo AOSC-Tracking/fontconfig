@@ -138,7 +138,8 @@ convenience for the applications' rendering mechanism.
   fontfeatures    String  List of the feature tags in OpenType to be enabled
   namelang        String  Language name to be used for the default value of
                           familylang, stylelang, and fullnamelang
-  prgname         String  String  Name of the running program
+  prgname         String  Basename of the running program's executable.
+                          On Windows, this excludes the .exe extension.
   postscriptname  String  Font family name in PostScript
   fonthashint     Bool    Whether the font has hinting
   order           Int     Order number of the font
