@@ -130,10 +130,17 @@ FcFreeTypeLangSet (const FcCharSet  *charset,
 	    if (fcLangCharSets[i].charset.num != exclusiveCharset->num)
 		continue;
 
+	    FcBool ok = FcTrue;
 	    for (j = 0; j < fcLangCharSets[i].charset.num; j++)
 		if (FcCharSetLeaf(&fcLangCharSets[i].charset, j) !=
 		    FcCharSetLeaf(exclusiveCharset, j))
-		    continue;
+		{
+		    ok = FcFalse;
+		    break;
+		}
+
+	    if (!ok)
+		continue;
 	}
 	missing = FcCharSetSubtractCount (&fcLangCharSets[i].charset, charset);
         if (FcDebug() & FC_DBG_SCANV)
