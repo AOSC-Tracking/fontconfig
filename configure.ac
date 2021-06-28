@@ -701,6 +701,8 @@ fi
 have_pthread=false
 if test "$os_win32" = no; then
 	AX_PTHREAD([have_pthread=true])
+	AC_SUBST(PTHREAD_CFLAGS)
+	AC_SUBST(PTHREAD_LIBS)
 fi
 if $have_pthread; then
 	LIBS="$PTHREAD_LIBS $LIBS"
