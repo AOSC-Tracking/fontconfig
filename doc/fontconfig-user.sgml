@@ -129,7 +129,7 @@ convenience for the applications' rendering mechanism.
   charset         CharSet Unicode chars encoded by the font
   lang            String  List of RFC-3066-style languages this
                           font supports
-  fontversion     Int     Version number of the font
+  fontversion     Int     Version number of the font times 2^16
   capability      String  List of layout capabilities in the font
   fontformat      String  String name of the font format
   embolden        Bool    Rasterizer should synthetically embolden the font
