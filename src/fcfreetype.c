@@ -1193,6 +1193,8 @@ FcFreeTypeQueryFaceInternal (const FT_Face  face,
     FcBool	    variable_weight = FcFalse;
     FcBool	    variable_width = FcFalse;
     FcBool	    variable_size = FcFalse;
+    FcBool	    variable_slant = FcFalse;
+    double	    slantangle = 0;
     FcCharSet       *cs;
     FcLangSet       *ls;
     FcNameMapping   *name_mapping = NULL;
@@ -1301,6 +1303,21 @@ FcFreeTypeQueryFaceInternal (const FT_Face  face,
 		  /* Values in 'opsz' match Fontconfig FC_SIZE, both are in points. */
 		  variable_size = FcTrue;
 		  break;
+
+		case FT_MAKE_TAG ('i','t','a','l'):
+		  FcPatternObjectAddInteger (pat, FC_SLANT_OBJECT, FC_SLANT_ROMAN);
+		  FcPatternObjectAddInteger (pat, FC_SLANT_OBJECT, FC_SLANT_ITALIC);
+		  variable_slant = FcTrue;
+		  variable = FcTrue;
+		  break;
+
+		case FT_MAKE_TAG ('s','l','n','t'):
+		  obj = FC_SLANT_ANGLE_OBJECT;
+		  /* Values in 'slnt' match Fontconfig FC_SLANT_ANGLE directly. */
+		  FcPatternObjectAddInteger (pat, FC_SLANT_OBJECT, FC_SLANT_ROMAN);
+		  FcPatternObjectAddInteger (pat, FC_SLANT_OBJECT, FC_SLANT_OBLIQUE);
+		  variable_slant = FcTrue;
+		  break;
 	      }
 
 	      if (obj != FC_INVALID_OBJECT)
@@ -1348,6 +1365,10 @@ FcFreeTypeQueryFaceInternal (const FT_Face  face,
 		  if (!FcPatternObjectAddDouble (pat, FC_SIZE_OBJECT, value))
 		      goto bail1;
 		  break;
+
+		case FT_MAKE_TAG ('s','l','n','t'):
+		  slantangle = value;
+		  break;
 	    }
 	  }
 	}
@@ -1367,6 +1388,10 @@ FcFreeTypeQueryFaceInternal (const FT_Face  face,
 		    if (!FcPatternObjectAddDouble (pat, FC_SIZE_OBJECT, master->axis[i].def / (double) (1U << 16)))
 			goto bail1;
 		    variable_size = FcTrue;
+		    break;
+
+		case FT_MAKE_TAG ('s','l','n','t'):
+		    slantangle = master->axis[i].def / (double) (1U << 16);
 		    break;
 		}
 	    }
@@ -2040,6 +2065,12 @@ FcFreeTypeQueryFaceInternal (const FT_Face  face,
 	    slant = FC_SLANT_ITALIC;
     }
 
+    if (!variable_slant && slantangle != 0)
+    {
+	/* Fonts with an 'slnt' axis should be considered oblique */
+	slant = FC_SLANT_OBLIQUE;
+    }
+
     if (weight == -1)
     {
 	weight = FC_WEIGHT_MEDIUM;
@@ -2053,7 +2084,10 @@ FcFreeTypeQueryFaceInternal (const FT_Face  face,
     if (foundry == 0)
 	foundry = (FcChar8 *) "unknown";
 
-    if (!FcPatternObjectAddInteger (pat, FC_SLANT_OBJECT, slant))
+    if (!variable_slant && !FcPatternObjectAddDouble (pat, FC_SLANT_ANGLE_OBJECT, slantangle))
+	goto bail1;
+
+    if (!variable_slant && !FcPatternObjectAddInteger (pat, FC_SLANT_OBJECT, slant))
 	goto bail1;
 
     if (!variable_weight && !FcPatternObjectAddDouble (pat, FC_WEIGHT_OBJECT, weight))

@@ -341,6 +341,7 @@ typedef enum _FcMatcherPriority {
     PRI1(SLANT),
     PRI1(WEIGHT),
     PRI1(WIDTH),
+    PRI1(SLANT_ANGLE),
     PRI1(FONT_HAS_HINT),
     PRI1(DECORATIVE),
     PRI1(ANTIALIAS),
@@ -665,7 +666,9 @@ FcFontRenderPrepare (FcConfig	    *config,
     FcValue	    v;
     FcResult	    result;
     FcBool	    variable = FcFalse;
+    FcBool	    variable_slant = FcFalse;
     FcStrBuf        variations;
+    FcPatternIter   iter;
 
     assert (pat != NULL);
     assert (font != NULL);
@@ -673,7 +676,12 @@ FcFontRenderPrepare (FcConfig	    *config,
     FcPatternObjectGetBool (font, FC_VARIABLE_OBJECT, 0, &variable);
     assert (variable != FcDontCare);
     if (variable)
+    {
 	FcStrBufInit (&variations, NULL, 0);
+	if (FcPatternFindObjectIter (font, &iter, FC_SLANT_OBJECT) &&
+	    FcPatternIterValueCount (font, &iter) > 1)
+	    variable_slant = FcTrue;
+    }
 
     new = FcPatternCreate ();
     if (!new)
@@ -835,6 +843,52 @@ FcFontRenderPrepare (FcConfig	    *config,
 				    FcValueListDuplicate (FcPatternEltValues(pe)),
 				    FcFalse);
 	}
+    }
+
+    if (variable_slant)
+    {
+	int slant;
+	FcChar8 temp[128];
+	FcRange *r;
+
+	if (FcPatternObjectGetInteger (new, FC_SLANT_OBJECT, 0, &slant) != FcResultMatch)
+	    slant = FC_SLANT_ROMAN;
+
+	if (FcPatternObjectGetRange (font, FC_SLANT_ANGLE_OBJECT, 0, &r) == FcResultMatch &&
+	    FcPatternObjectGet (new, FC_SLANT_ANGLE_OBJECT, 0, &v) == FcResultMatch)
+	{
+	    /* handle fonts with 'slnt' axis */
+	    double slantangle = 0;
+
+	    assert (v.type == FcTypeDouble || v.type == FcTypeRange);
+
+	    if (v.type == FcTypeDouble)
+		slantangle = v.u.d;
+	    else if (v.type == FcTypeRange)
+	    {
+		/* We get here if the font has a 'slnt' axis and the user did not specify
+		 * what slant angle to use. Figure out a default based on other provided
+		 * informations.
+		 */
+		if (slant != FC_SLANT_ROMAN)
+		{
+		    FcRangeGetDouble (v.u.r, &slantangle, NULL);
+		    (void) FcPatternObjectDel (new, FC_SLANT_ANGLE_OBJECT);
+		    FcPatternObjectAddDouble (new, FC_SLANT_ANGLE_OBJECT, slantangle);
+		}
+		else
+		    (void) FcPatternObjectDel (new, FC_SLANT_ANGLE_OBJECT);
+
+	    }
+	    sprintf ((char *) temp, "slnt=%f", slantangle);
+	}
+	else {
+	    /* handle fonts with 'ital' axis */
+	    sprintf ((char *) temp, "ital=%d", slant == FC_SLANT_ROMAN ? 0 : 1);
+	}
+	if (variations.len)
+	    FcStrBufChar (&variations, ',');
+	FcStrBufString (&variations, temp);
     }
 
     if (variable && variations.len)
