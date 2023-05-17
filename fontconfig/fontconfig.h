@@ -129,6 +129,7 @@ typedef int		FcBool;
 #define FC_FONT_HAS_HINT    "fonthashint"	/* Bool - true if font has hinting */
 #define FC_ORDER	    "order"		/* Integer */
 #define FC_DESKTOP_NAME     "desktop"		/* String */
+#define FC_SLANT_ANGLE	    "slantangle"	/* double */
 
 #define FC_CACHE_SUFFIX		    ".cache-" FC_CACHE_VERSION
 #define FC_DIR_CACHE_FILE	    "fonts.cache-" FC_CACHE_VERSION
