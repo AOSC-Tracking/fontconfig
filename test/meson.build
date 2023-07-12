@@ -1,5 +1,6 @@
+fsmod = import('fs')
 tests = [
-  ['test-bz89617.c', {'c_args': ['-DSRCDIR="@0@"'.format(meson.current_source_dir())]}],
+  ['test-bz89617.c', {'c_args': ['-DSRCDIR="@0@"'.format(fsmod.as_posix(meson.current_source_dir()))]}],
   ['test-bz131804.c'],
   ['test-bz96676.c'],
   ['test-name-parse.c'],
@@ -12,7 +13,7 @@ tests = [
 if host_machine.system() != 'windows'
   tests += [
     # FIXME: ['test-migration.c'],
-    ['test-bz106632.c', {'c_args': ['-DFONTFILE="@0@"'.format(join_paths(meson.current_source_dir(), '4x6.pcf'))]}],
+    ['test-bz106632.c', {'c_args': ['-DFONTFILE="@0@"'.format(fsmod.as_posix(join_paths(meson.current_source_dir(), '4x6.pcf')))]}],
     ['test-issue107.c'], # FIXME: fails on mingw
     # FIXME: this needs NotoSans-hinted.zip font downloaded and unpacked into test build directory! see run-test.sh
     ['test-crbug1004254.c', {'dependencies': dependency('threads')}], # for pthread
