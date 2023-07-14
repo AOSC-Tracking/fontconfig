@@ -29,7 +29,7 @@ if __name__== '__main__':
 
     stdout = ret.stdout.decode('utf8')
 
-    with open(args[0].output, 'w') as out:
+    with open(args[0].output, 'w', encoding='utf-8', newline='\n') as out:
         write = True
         for l in stdout.split('\n'):
             l = l.strip('\r')
