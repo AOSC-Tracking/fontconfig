@@ -83,8 +83,11 @@
 #define F_OK    0       /* Test for existence.  */
 #endif
 
-typedef int mode_t;
 #endif /* !HAVE_UNISTD_H */
+
+#if !HAVE_SYS_TYPES_H && !HAVE_SYS_STAT_H
+typedef int mode_t;
+#endif
 
 #if !defined (HAVE_MKOSTEMP) && !defined(HAVE_MKSTEMP) && !defined(HAVE__MKTEMP_S)
 static int
