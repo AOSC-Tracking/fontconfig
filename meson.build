@@ -57,6 +57,8 @@ check_headers = [
   ['sys/statfs.h'],
   ['sys/param.h'],
   ['sys/mount.h'],
+  ['sys/stat.h'],
+  ['sys/types.h'],
 ]
 
 check_funcs = [
