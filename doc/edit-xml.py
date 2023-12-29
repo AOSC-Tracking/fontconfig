@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# fontconfig/doc/edit-sgml.py
+# fontconfig/doc/edit-xml.py
 #
 # Copyright © 2003 Keith Packard
 # Copyright © 2020 Tim-Philipp Müller
@@ -74,7 +74,7 @@ for chunk in fncs_chunks:
 
   while lines:
     tag = lines.pop(0).strip()
-    # FIXME: this hard codes the tag used in funcs.sgml - we're lazy
+    # FIXME: this hard codes the tag used in funcs.xml - we're lazy
     if tag.startswith('PROTOTYPE'):
       text = ''
     else:
@@ -149,7 +149,7 @@ def do_replace(template_lines, rep, tag_suffix=''):
       loop_lines = []
     else:
       if not skip_lines:
-        # special-case inline optional substitution (hard-codes specific pattern in funcs.sgml because we're lazy)
+        # special-case inline optional substitution (hard-codes specific pattern in funcs.xml because we're lazy)
         output_line = re.sub(r'@\?(RET)@@RET@@:@(void)@;@', lambda m: rep.get(m.group(1) + tag_suffix, m.group(2)), t_line)
         # replace any substitution tags with their respective substitution text
         output_line = re.sub(r'@(\w+)@', lambda m: rep.get(m.group(1) + tag_suffix, ''), output_line)

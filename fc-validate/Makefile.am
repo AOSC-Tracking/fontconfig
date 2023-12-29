@@ -27,7 +27,7 @@ DOC2MAN = docbook2man
 
 FC_VALIDATE_SRC=${top_srcdir}/fc-validate
 
-SGML = ${FC_VALIDATE_SRC}/fc-validate.sgml
+XML = ${FC_VALIDATE_SRC}/fc-validate.xml
 
 AM_CPPFLAGS=-I${top_srcdir} $(FREETYPE_CFLAGS) $(WARN_CFLAGS)
 
@@ -37,7 +37,7 @@ if ENABLE_DOCS
 man_MANS=${BUILT_MANS}
 endif
 
-EXTRA_DIST=fc-validate.sgml $(BUILT_MANS)
+EXTRA_DIST=fc-validate.xml $(BUILT_MANS)
 
 CLEANFILES =
 
@@ -45,9 +45,9 @@ fc_validate_LDADD = ${top_builddir}/src/libfontconfig.la $(FREETYPE_LIBS)
 
 if USEDOCBOOK
 
-${man_MANS}: ${SGML}
+${man_MANS}: ${XML}
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) ${SGML}; \
+	$(DOC2MAN) ${XML}; \
 	$(RM) manpage.*
 
 all-local: $(man_MANS)

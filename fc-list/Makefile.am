@@ -25,7 +25,7 @@ DOC2MAN = docbook2man
 
 FC_LIST_SRC=${top_srcdir}/fc-list
 
-SGML = ${FC_LIST_SRC}/fc-list.sgml
+XML = ${FC_LIST_SRC}/fc-list.xml
 
 bin_PROGRAMS=fc-list
 
@@ -37,7 +37,7 @@ if ENABLE_DOCS
 man_MANS=${BUILT_MANS}
 endif
 
-EXTRA_DIST=fc-list.sgml $(BUILT_MANS)
+EXTRA_DIST=fc-list.xml $(BUILT_MANS)
 
 CLEANFILES =
 
@@ -45,9 +45,9 @@ fc_list_LDADD = ${top_builddir}/src/libfontconfig.la
 
 if USEDOCBOOK
 
-${man_MANS}: ${SGML}
+${man_MANS}: ${XML}
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) ${SGML}; \
+	$(DOC2MAN) ${XML}; \
 	$(RM) manpage.*
 
 all-local: $(man_MANS)

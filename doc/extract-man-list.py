@@ -56,7 +56,7 @@ def read_fncs_file(fn):
 
       while lines:
         tag = lines.pop(0).strip()
-        # FIXME: this hard codes the tag used in funcs.sgml - we're lazy
+        # FIXME: this hard codes the tag used in funcs.xml - we're lazy
         if tag.startswith('PROTOTYPE'):
           text = ''
         else:

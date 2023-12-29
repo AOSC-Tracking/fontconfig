@@ -825,7 +825,7 @@ fc-query/Makefile
 fc-scan/Makefile
 fc-validate/Makefile
 doc/Makefile
-doc/version.sgml
+doc/version.xml
 its/Makefile
 po/Makefile.in
 po-conf/Makefile.in

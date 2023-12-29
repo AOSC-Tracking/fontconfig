@@ -27,7 +27,7 @@ DOC2MAN = docbook2man
 
 FC_QUERY_SRC=${top_srcdir}/fc-query
 
-SGML = ${FC_QUERY_SRC}/fc-query.sgml
+XML = ${FC_QUERY_SRC}/fc-query.xml
 
 AM_CPPFLAGS=-I${top_srcdir} $(FREETYPE_CFLAGS) $(WARN_CFLAGS)
 
@@ -37,7 +37,7 @@ if ENABLE_DOCS
 man_MANS=${BUILT_MANS}
 endif
 
-EXTRA_DIST=fc-query.sgml $(BUILT_MANS)
+EXTRA_DIST=fc-query.xml $(BUILT_MANS)
 
 CLEANFILES =
 
@@ -45,9 +45,9 @@ fc_query_LDADD = ${top_builddir}/src/libfontconfig.la
 
 if USEDOCBOOK
 
-${man_MANS}: ${SGML}
+${man_MANS}: ${XML}
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) ${SGML}; \
+	$(DOC2MAN) ${XML}; \
 	$(RM) manpage.*
 
 all-local: $(man_MANS)

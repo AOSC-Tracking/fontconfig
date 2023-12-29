@@ -25,7 +25,7 @@ DOC2MAN = docbook2man
 
 FC_CACHE_SRC=${top_srcdir}/fc-cache
 
-SGML = ${FC_CACHE_SRC}/fc-cache.sgml
+XML = ${FC_CACHE_SRC}/fc-cache.xml
 
 if OS_WIN32
 else
@@ -46,7 +46,7 @@ if ENABLE_DOCS
 man_MANS=${BUILT_MANS}
 endif
 
-EXTRA_DIST=fc-cache.sgml $(BUILT_MANS)
+EXTRA_DIST=fc-cache.xml $(BUILT_MANS)
 
 CLEANFILES =
 
@@ -54,9 +54,9 @@ fc_cache_LDADD = ${top_builddir}/src/libfontconfig.la
 
 if USEDOCBOOK
 
-${man_MANS}: ${SGML}	
+${man_MANS}: ${XML}	
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) ${SGML}; \
+	$(DOC2MAN) ${XML}; \
 	$(RM) manpage.*
 
 all-local: $(man_MANS)

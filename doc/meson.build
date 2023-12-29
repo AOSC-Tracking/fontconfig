@@ -48,39 +48,39 @@ foreach m : man_list
   man_pages += ['@0@.3'.format(m)]
 endforeach
 
-# Generate sgml pages for funcs
-edit_sgml = find_program('edit-sgml.py')
+# Generate xml pages for funcs
+edit_xml = find_program('edit-xml.py')
 
 # copy into build directory, it includes generated files from build directory
-fontconfig_devel_sgml = configure_file(output: 'fontconfig-devel.sgml',
-  input: 'fontconfig-devel.sgml',
+fontconfig_devel_xml = configure_file(output: 'fontconfig-devel.xml',
+  input: 'fontconfig-devel.xml',
   copy: true)
 
-fontconfig_user_sgml = configure_file(output: 'fontconfig-user.sgml',
-  input: 'fontconfig-user.sgml',
+fontconfig_user_xml = configure_file(output: 'fontconfig-user.xml',
+  input: 'fontconfig-user.xml',
   copy: true)
 
 version_conf = configuration_data()
 version_conf.set('VERSION', meson.project_version())
 
-configure_file(output: 'version.sgml',
-  input: 'version.sgml.in',
+configure_file(output: 'version.xml',
+  input: 'version.xml.in',
   configuration: version_conf)
 
 confdir_conf = configuration_data()
 confdir_conf.set('BASECONFIGDIR', fc_configdir)
 
-confdir_sgml = configure_file(output: 'confdir.sgml',
-  input: 'confdir.sgml.in',
+confdir_xml = configure_file(output: 'confdir.xml',
+  input: 'confdir.xml.in',
   configuration: confdir_conf)
 
-funcs_sgml = []
+funcs_xml = []
 
 foreach f : doc_funcs_fncs
-  funcs_sgml += [custom_target('@0@.sgml'.format(f),
-    input: [files('func.sgml'), files('@0@.fncs'.format(f))],
-    output: '@0@.sgml'.format(f),
-    command: [edit_sgml, '@INPUT0@', '@INPUT1@', '@OUTPUT@'],
+  funcs_xml += [custom_target('@0@.xml'.format(f),
+    input: [files('func.xml'), files('@0@.fncs'.format(f))],
+    output: '@0@.xml'.format(f),
+    command: [edit_xml, '@INPUT0@', '@INPUT1@', '@OUTPUT@'],
     install: false)]
 endforeach
 
@@ -88,7 +88,7 @@ if docbook2man.found()
   doc_targets += ['man']
 
   custom_target('devel-man',
-    input: [fontconfig_devel_sgml, funcs_sgml],
+    input: [fontconfig_devel_xml, funcs_xml],
     output: man_pages,
     command: [run_quiet, docbook2man, '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,
@@ -97,7 +97,7 @@ if docbook2man.found()
 
   # fonts.conf(5)
   custom_target('fonts-conf-5-man-page',
-    input: [fontconfig_user_sgml],
+    input: [fontconfig_user_xml],
     output: 'fonts-conf.5',
     command: [run_quiet, docbook2man, '@INPUT0@', '--output', '@OUTDIR@'],
     install_dir: get_option('mandir') / 'man5',
@@ -108,7 +108,7 @@ if docbook2man.found()
   foreach t : tools_man_pages
     # docbook2man doesn't seem to have a --quiet option unfortunately
     custom_target('@0@-man-page'.format(t),
-      input: '../@0@/@0@.sgml'.format(t),
+      input: '../@0@/@0@.xml'.format(t),
       output: '@0@.1'.format(t),
       command: [run_quiet, docbook2man, '@INPUT@', '--output', '@OUTDIR@'],
       install_dir: get_option('mandir') / 'man1',
@@ -120,7 +120,7 @@ if docbook2pdf.found()
   doc_targets += ['PDF']
 
   custom_target('devel-pdf',
-    input: [fontconfig_devel_sgml, funcs_sgml],
+    input: [fontconfig_devel_xml, funcs_xml],
     output: 'fontconfig-devel.pdf',
     command: [run_quiet, docbook2pdf, '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,
@@ -128,7 +128,7 @@ if docbook2pdf.found()
     install: true)
 
   custom_target('user-pdf',
-    input: [fontconfig_user_sgml, funcs_sgml],
+    input: [fontconfig_user_xml, funcs_xml],
     output: 'fontconfig-user.pdf',
     command: [run_quiet, docbook2pdf, '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,
@@ -140,7 +140,7 @@ if docbook2txt.found()
   doc_targets += ['Text']
 
   custom_target('devel-txt',
-    input: [fontconfig_devel_sgml, funcs_sgml],
+    input: [fontconfig_devel_xml, funcs_xml],
     output: 'fontconfig-devel.txt',
     command: [run_quiet, docbook2txt, '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,
@@ -148,7 +148,7 @@ if docbook2txt.found()
     install: true)
 
   custom_target('user-txt',
-    input: [fontconfig_user_sgml, funcs_sgml],
+    input: [fontconfig_user_xml, funcs_xml],
     output: 'fontconfig-user.txt',
     command: [run_quiet, docbook2txt, '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,
@@ -160,7 +160,7 @@ if docbook2html.found()
   doc_targets += ['HTML']
 
   custom_target('devel-html',
-    input: [fontconfig_devel_sgml, funcs_sgml],
+    input: [fontconfig_devel_xml, funcs_xml],
     output: 'fontconfig-devel.html',
     command: [run_quiet, docbook2html, '--nochunks', '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,
@@ -168,7 +168,7 @@ if docbook2html.found()
     install: true)
 
   custom_target('user-html',
-    input: [fontconfig_user_sgml, funcs_sgml],
+    input: [fontconfig_user_xml, funcs_xml],
     output: 'fontconfig-user.html',
     command: [run_quiet, docbook2html, '--nochunks', '@INPUT0@', '--output', '@OUTDIR@'],
     build_by_default: true,

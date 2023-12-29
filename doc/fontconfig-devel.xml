@@ -1,30 +1,30 @@
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.5//EN" [
-<!ENTITY fcatomic SYSTEM "fcatomic.sgml">
-<!ENTITY fcblanks SYSTEM "fcblanks.sgml">
-<!ENTITY fccache SYSTEM "fccache.sgml">
-<!ENTITY fccharset SYSTEM "fccharset.sgml">
-<!ENTITY fcconfig SYSTEM "fcconfig.sgml">
-<!ENTITY fcconstant SYSTEM "fcconstant.sgml">
-<!ENTITY fcdircache SYSTEM "fcdircache.sgml">
-<!ENTITY fcfile SYSTEM "fcfile.sgml">
-<!ENTITY fcfontset SYSTEM "fcfontset.sgml">
-<!ENTITY fcformat SYSTEM "fcformat.sgml">
-<!ENTITY fcfreetype SYSTEM "fcfreetype.sgml">
-<!ENTITY fcinit SYSTEM "fcinit.sgml">
-<!ENTITY fclangset SYSTEM "fclangset.sgml">
-<!ENTITY fcmatrix SYSTEM "fcmatrix.sgml">
-<!ENTITY fcobjectset SYSTEM "fcobjectset.sgml">
-<!ENTITY fcobjecttype SYSTEM "fcobjecttype.sgml">
-<!ENTITY fcpattern SYSTEM "fcpattern.sgml">
-<!ENTITY fcrange SYSTEM "fcrange.sgml">
-<!ENTITY fcstring SYSTEM "fcstring.sgml">
-<!ENTITY fcstrset SYSTEM "fcstrset.sgml">
-<!ENTITY fcvalue SYSTEM "fcvalue.sgml">
-<!ENTITY fcweight SYSTEM "fcweight.sgml">
-<!ENTITY version SYSTEM "version.sgml">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY fcatomic SYSTEM "fcatomic.xml">
+<!ENTITY fcblanks SYSTEM "fcblanks.xml">
+<!ENTITY fccache SYSTEM "fccache.xml">
+<!ENTITY fccharset SYSTEM "fccharset.xml">
+<!ENTITY fcconfig SYSTEM "fcconfig.xml">
+<!ENTITY fcconstant SYSTEM "fcconstant.xml">
+<!ENTITY fcdircache SYSTEM "fcdircache.xml">
+<!ENTITY fcfile SYSTEM "fcfile.xml">
+<!ENTITY fcfontset SYSTEM "fcfontset.xml">
+<!ENTITY fcformat SYSTEM "fcformat.xml">
+<!ENTITY fcfreetype SYSTEM "fcfreetype.xml">
+<!ENTITY fcinit SYSTEM "fcinit.xml">
+<!ENTITY fclangset SYSTEM "fclangset.xml">
+<!ENTITY fcmatrix SYSTEM "fcmatrix.xml">
+<!ENTITY fcobjectset SYSTEM "fcobjectset.xml">
+<!ENTITY fcobjecttype SYSTEM "fcobjecttype.xml">
+<!ENTITY fcpattern SYSTEM "fcpattern.xml">
+<!ENTITY fcrange SYSTEM "fcrange.xml">
+<!ENTITY fcstring SYSTEM "fcstring.xml">
+<!ENTITY fcstrset SYSTEM "fcstrset.xml">
+<!ENTITY fcvalue SYSTEM "fcvalue.xml">
+<!ENTITY fcweight SYSTEM "fcweight.xml">
+<!ENTITY version SYSTEM "version.xml">
 ]>
 <!--
-    fontconfig/doc/local-fontconfig-devel.sgml
+    fontconfig/doc/local-fontconfig-devel.xml
 
     Copyright © 2003 Keith Packard
 

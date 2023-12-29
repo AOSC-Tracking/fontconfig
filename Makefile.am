@@ -34,7 +34,7 @@ ACLOCAL_AMFLAGS = -I m4
 MESON_FILES = \
 	conf.d/link_confs.py \
 	conf.d/write-35-lang-normalize-conf.py \
-	doc/edit-sgml.py \
+	doc/edit-xml.py \
 	doc/extract-man-list.py \
 	doc/run-quiet.py \
 	fc-case/fc-case.py \
