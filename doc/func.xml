@@ -36,6 +36,9 @@
             <refmiscinfo class="software">Fontconfig &version;</refmiscinfo>
         </refmeta>
         <refnamediv>
+@?TITLE@
+            <refname>@TITLE@</refname>
+@;@
 @{PROTOTYPE@
             <refname>@FUNC@</refname>
 @}PROTOTYPE@

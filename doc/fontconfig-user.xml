@@ -25,11 +25,12 @@
 -->
 <refentry>
 <refmeta>
-  <refentrytitle>fonts-conf</refentrytitle>
+  <refentrytitle>fonts.conf</refentrytitle>
   <manvolnum>5</manvolnum>
 </refmeta>
 <refnamediv>
         <refname>fonts.conf</refname>
+        <refname>fonts-conf</refname>
         <refpurpose>Font configuration files</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
