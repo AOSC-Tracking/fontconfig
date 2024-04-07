@@ -27,13 +27,13 @@ EXTRA_DIST =			\
 	$(BUILT_DOCS)		\
 	$(DOC_FUNCS_FNCS)	\
 	$(HTML_DIR)/*		\
-	$(SGML_FILES)		\
+	$(XML_FILES)		\
 	$(check_SCRIPTS)	\
-	confdir.sgml.in		\
-	func.sgml		\
+	confdir.xml.in		\
+	func.xml		\
 	$(NULL)
 BUILT_SOURCES =			\
-	$(DOC_FUNCS_SGML)	\
+	$(DOC_FUNCS_XML)	\
 	$(NULL)
 
 if USEDOCBOOK
@@ -50,18 +50,18 @@ cleandocfiles =			\
 	$(NULL)
 endif
 MAINTAINERCLEANFILES =			\
-	$(DOC_FUNCS_SGML)		\
+	$(DOC_FUNCS_XML)		\
 	$(maintainerdoccleanfiles)	\
 	$(NULL)
 CLEANFILES =			\
 	$(cleandocfiles)	\
-	$(LOCAL_SGML_FILES)	\
-	confdir.sgml		\
+	$(LOCAL_XML_FILES)	\
+	confdir.xml		\
 	func.refs		\
 	$(NULL)
 SUFFIXES =	\
 	.fncs	\
-	.sgml	\
+	.xml	\
 	.txt	\
 	.html	\
 	$(NULL)
@@ -102,16 +102,16 @@ DOC_FUNCS_FNCS =		\
 	fcvalue.fncs		\
 	fcweight.fncs		\
 	$(NULL)
-SGML_FILES =			\
-	fontconfig-user.sgml	\
-	fontconfig-devel.sgml	\
+XML_FILES =			\
+	fontconfig-user.xml	\
+	fontconfig-devel.xml	\
 	$(NULL)
-LOCAL_SGML_FILES =			\
-	local-fontconfig-user.sgml	\
-	local-fontconfig-devel.sgml	\
+LOCAL_XML_FILES =			\
+	local-fontconfig-user.xml	\
+	local-fontconfig-devel.xml	\
 	$(NULL)
 
-DOC_FUNCS_SGML = $(DOC_FUNCS_FNCS:.fncs=.sgml)
+DOC_FUNCS_XML = $(DOC_FUNCS_FNCS:.fncs=.xml)
 BUILT_DOCS =		\
 	$(HTML_FILES)	\
 	$(PDF_FILES)	\
@@ -120,13 +120,13 @@ BUILT_DOCS =		\
 	$(man5_MANS)	\
 	$(NULL)
 DOCS_DEPS =			\
-	$(DOC_FUNCS_SGML)	\
-	confdir.sgml		\
-	version.sgml		\
+	$(DOC_FUNCS_XML)	\
+	confdir.xml		\
+	version.xml		\
 	$(NULL)
 
-TXT_FILES = $(SGML_FILES:.sgml=.txt)
-PDF_FILES = $(SGML_FILES:.sgml=.pdf)
+TXT_FILES = $(XML_FILES:.xml=.txt)
+PDF_FILES = $(XML_FILES:.xml=.pdf)
 HTML_FILES =			\
 	fontconfig-user.html	\
 	$(NULL)
@@ -135,7 +135,7 @@ HTML_DIR = fontconfig-devel
 noinst_PROGRAMS =	\
 	$(NULL)
 noinst_SCRIPTS =		\
-	edit-sgml.py		\
+	edit-xml.py		\
 	$(NULL)
 ##
 check_SCRIPTS =			\
@@ -161,64 +161,64 @@ htmldoc_DATA =		\
 
 if USEDOCBOOK
 BUILT_SOURCES +=		\
-	$(LOCAL_SGML_FILES)	\
+	$(LOCAL_XML_FILES)	\
 	$(NULL)
 htmldoc_DATA += $(HTML_DIR)/*
 
 ##
-.fncs.sgml:
+.fncs.xml:
 	$(AM_V_GEN) $(RM) $@; \
-	$(PYTHON) $(srcdir)/edit-sgml.py $(srcdir)/func.sgml '$(srcdir)/$*.fncs' $*.sgml
-.sgml.txt:
+	$(PYTHON) $(srcdir)/edit-xml.py $(srcdir)/func.xml '$(srcdir)/$*.fncs' $*.xml
+.xml.txt:
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2TXT) $*.sgml
-.sgml.pdf:
+	$(DOC2TXT) $*.xml
+.xml.pdf:
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2PDF) $*.sgml
-.sgml.html:
+	$(DOC2PDF) $*.xml
+.xml.html:
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2HTML) -u $*.sgml > $@
+	$(DOC2HTML) -u $*.xml > $@
 ##
-fonts-conf.5: local-fontconfig-user.sgml version.sgml confdir.sgml
+fonts-conf.5: local-fontconfig-user.xml version.xml confdir.xml
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) local-fontconfig-user.sgml && \
+	$(DOC2MAN) local-fontconfig-user.xml && \
 	$(RM) manpage.*
 ##
 $(man3_MANS): func.refs
-func.refs: local-fontconfig-devel.sgml $(DOCS_DEPS)
+func.refs: local-fontconfig-devel.xml $(DOCS_DEPS)
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) -o devel-man local-fontconfig-devel.sgml && \
+	$(DOC2MAN) -o devel-man local-fontconfig-devel.xml && \
 	mv devel-man/manpage.refs func.refs &&	\
 	mv devel-man/*.3 . &&			\
 	$(RM) devel-man/manpage.* &&		\
 	rmdir devel-man || rm $@ || :
-confdir.sgml: $(srcdir)/confdir.sgml.in
+confdir.xml: $(srcdir)/confdir.xml.in
 	$(AM_V_GEN) sed -e 's,@BASECONFIGDIR\@,${BASECONFIGDIR},' $(srcdir)/$@.in | awk '{if (NR > 1) printf("\n"); printf("%s", $$0);}' > $@
 ##
-$(DOC_FUNCS_SGML): $(DOC_FUNCS_FNCS) $(srcdir)/edit-sgml.py $(srcdir)/func.sgml
+$(DOC_FUNCS_XML): $(DOC_FUNCS_FNCS) $(srcdir)/edit-xml.py $(srcdir)/func.xml
 $(TXT_FILES): $(DOCS_DEPS)
 $(PDF_FILES): $(DOCS_DEPS)
 $(HTML_FILES): $(DOCS_DEPS)
 $(HTML_DIR)/*: $(HTML_DIR)
-$(HTML_DIR): local-fontconfig-devel.sgml $(DOCS_DEPS)
+$(HTML_DIR): local-fontconfig-devel.xml $(DOCS_DEPS)
 	$(AM_V_GEN) $(RM) -r $@; \
-	$(DOC2HTML) -V '%use-id-as-filename%' -o $@ local-fontconfig-devel.sgml
-local-fontconfig-user.sgml: $(srcdir)/fontconfig-user.sgml
-	$(AM_V_GEN) $(LN_S) $(srcdir)/fontconfig-user.sgml $@;	\
-	[ ! -f $(builddir)/fontconfig-user.sgml ] && cp -a $(srcdir)/fontconfig-user.sgml $(builddir)/fontconfig-user.sgml || :
-local-fontconfig-devel.sgml: $(srcdir)/fontconfig-devel.sgml
-	$(AM_V_GEN) $(LN_S) $(srcdir)/fontconfig-devel.sgml $@;	\
-	[ ! -f $(builddir)/fontconfig-devel.sgml ] && cp -a $(srcdir)/fontconfig-devel.sgml $(builddir)/fontconfig-devel.sgml || :
+	$(DOC2HTML) -V '%use-id-as-filename%' -o $@ local-fontconfig-devel.xml
+local-fontconfig-user.xml: $(srcdir)/fontconfig-user.xml
+	$(AM_V_GEN) $(LN_S) $(srcdir)/fontconfig-user.xml $@;	\
+	[ ! -f $(builddir)/fontconfig-user.xml ] && cp -a $(srcdir)/fontconfig-user.xml $(builddir)/fontconfig-user.xml || :
+local-fontconfig-devel.xml: $(srcdir)/fontconfig-devel.xml
+	$(AM_V_GEN) $(LN_S) $(srcdir)/fontconfig-devel.xml $@;	\
+	[ ! -f $(builddir)/fontconfig-devel.xml ] && cp -a $(srcdir)/fontconfig-devel.xml $(builddir)/fontconfig-devel.xml || :
 #
 all-local: $(BUILT_DOCS) $(HTML_DIR)/*
 clean-local:
 	$(RM) -r $(HTML_DIR) devel-man
-	[ "x$(builddir)" != "x$(srcdir)" ] && $(RM) $(builddir)/*.sgml || :
+	[ "x$(builddir)" != "x$(srcdir)" ] && $(RM) $(builddir)/*.xml || :
 dist-local-check-docs-enabled:
 	@true
 else
 htmldoc_DATA += $(srcdir)/$(HTML_DIR)/*
-.fncs.sgml:
+.fncs.xml:
 	$(AM_V_GEN) $(RM) $@; \
 	touch -r $< $@
 all-local:

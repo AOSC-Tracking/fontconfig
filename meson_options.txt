@@ -1,7 +1,6 @@
 # Common feature options
 option('doc', type : 'feature', value : 'auto', yield: true,
   description: 'Build documentation')
-option('doc-txt', type: 'feature', value: 'auto')
 option('doc-man', type: 'feature', value: 'auto')
 option('doc-pdf', type: 'feature', value: 'auto')
 option('doc-html', type: 'feature', value: 'auto')

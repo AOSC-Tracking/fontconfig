@@ -1,6 +1,6 @@
-<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
-<!ENTITY version SYSTEM "version.sgml">
-<!ENTITY confdir SYSTEM "confdir.sgml">
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+<!ENTITY confdir SYSTEM "confdir.xml">
 ]>
 <!--
     Copyright © 2003 Keith Packard
@@ -25,11 +25,12 @@
 -->
 <refentry>
 <refmeta>
-  <refentrytitle>fonts-conf</refentrytitle>
+  <refentrytitle>fonts.conf</refentrytitle>
   <manvolnum>5</manvolnum>
 </refmeta>
 <refnamediv>
         <refname>fonts.conf</refname>
+        <refname>fonts-conf</refname>
         <refpurpose>Font configuration files</refpurpose>
 </refnamediv>
 <refsynopsisdiv>

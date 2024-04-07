@@ -96,11 +96,11 @@ git-mk-install:
 $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 	$(AM_V_GEN) \
 	{ \
-		if test "x$(DOC_MODULE)" = x -o "x$(DOC_MAIN_SGML_FILE)" = x; then :; else \
+		if test "x$(DOC_MODULE)" = x -o "x$(DOC_MAIN_XML_FILE)" = x; then :; else \
 			for x in \
 				$(DOC_MODULE)-decl-list.txt \
 				$(DOC_MODULE)-decl.txt \
-				tmpl/$(DOC_MODULE)-unused.sgml \
+				tmpl/$(DOC_MODULE)-unused.xml \
 				"tmpl/*.bak" \
 				xml html \
 			; do echo /$$x; done; \

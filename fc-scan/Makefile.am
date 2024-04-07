@@ -27,7 +27,7 @@ DOC2MAN = docbook2man
 
 FC_SCAN_SRC=${top_srcdir}/fc-scan
 
-SGML = ${FC_SCAN_SRC}/fc-scan.sgml
+XML = ${FC_SCAN_SRC}/fc-scan.xml
 
 AM_CPPFLAGS=-I${top_srcdir} $(FREETYPE_CFLAGS) $(WARN_CFLAGS)
 
@@ -37,7 +37,7 @@ if ENABLE_DOCS
 man_MANS=${BUILT_MANS}
 endif
 
-EXTRA_DIST=fc-scan.sgml $(BUILT_MANS)
+EXTRA_DIST=fc-scan.xml $(BUILT_MANS)
 
 CLEANFILES =
 
@@ -45,9 +45,9 @@ fc_scan_LDADD = ${top_builddir}/src/libfontconfig.la
 
 if USEDOCBOOK
 
-${man_MANS}: ${SGML}
+${man_MANS}: ${XML}
 	$(AM_V_GEN) $(RM) $@; \
-	$(DOC2MAN) ${SGML}; \
+	$(DOC2MAN) ${XML}; \
 	$(RM) manpage.*
 
 all-local: $(man_MANS)

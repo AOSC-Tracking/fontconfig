@@ -1,5 +1,5 @@
 <!--
-   fontconfig/doc/func.sgml
+   fontconfig/doc/func.xml
 
    Copyright © 2003 Keith Packard
 
@@ -36,6 +36,9 @@
             <refmiscinfo class="software">Fontconfig &version;</refmiscinfo>
         </refmeta>
         <refnamediv>
+@?TITLE@
+            <refname>@TITLE@</refname>
+@;@
 @{PROTOTYPE@
             <refname>@FUNC@</refname>
 @}PROTOTYPE@
