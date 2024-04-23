@@ -33,7 +33,7 @@ static void MD5Transform(FcChar32 buf[4], FcChar32 in[16]);
 /*
  * Note: this code is harmless on little-endian machines.
  */
-void byteReverse(unsigned char *buf, unsigned longs)
+FcPrivate void byteReverse(unsigned char *buf, unsigned longs)
 {
     FcChar32 t;
     do {
