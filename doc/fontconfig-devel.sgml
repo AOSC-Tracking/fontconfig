@@ -150,7 +150,7 @@ convenience for the application's rendering mechanism.
     slant          FC_SLANT               Int     Italic, oblique or roman
     weight         FC_WEIGHT              Int     Light, medium, demibold,
                                                   bold or black
-    width          FC_WIDTH               Int     Condensed, normal or expanded
+    width          FC_WIDTH               Double  Condensed, normal or expanded
     size           FC_SIZE                Double  Point size
     aspect         FC_ASPECT              Double  Stretches glyphs horizontally
                                                   before hinting
