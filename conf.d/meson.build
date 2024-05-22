@@ -66,6 +66,7 @@ conf_links = [
   '65-fonts-persian.conf',
   '65-nonlatin.conf',
   '69-unifont.conf',
+  '70-no-bitmaps-except-emoji.conf',
   '80-delicious.conf',
   '90-synthetic.conf',
 ]
